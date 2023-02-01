@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:nextline_app/ui/views/task/task.dart';
+import 'package:nextline_app/ui/views/task/views/completed_task.dart';
+import 'package:nextline_app/ui/views/task/views/incompleted_task.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 
 class BotomMenu extends StatefulWidget {
@@ -24,17 +25,17 @@ class _BotomMenuState extends State<BotomMenu> {
           SalomonBottomBarItem(
             icon: const Icon(Icons.home),
             title: const Text("Inicio"),
-            selectedColor: Colors.green,
+            selectedColor: Colors.greenAccent,
           ),
           SalomonBottomBarItem(
             icon: const Icon(Icons.checklist_outlined),
             title: const Text("Completado"),
-            selectedColor: Colors.green,
+            selectedColor: Colors.greenAccent,
           ),
           SalomonBottomBarItem(
             icon: const Icon(Icons.bar_chart),
             title: const Text("Estadisticas"),
-            selectedColor: Colors.green,
+            selectedColor: Colors.greenAccent,
           ),
         ],
       ),
@@ -44,14 +45,13 @@ class _BotomMenuState extends State<BotomMenu> {
   _getPage(int page) {
     switch (page) {
       case 0:
-        return const TaskPage();
-
+        return const IncompleteTaskPage();
       case 1:
-        return const TaskPage();
+        return const CompletedTaskPage();
       case 2:
-        return const TaskPage();
+        return const IncompleteTaskPage();
       default:
-        return const TaskPage();
+        return const IncompleteTaskPage();
     }
   }
 }
