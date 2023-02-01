@@ -14,11 +14,8 @@ class _BotomMenuState extends State<BotomMenu> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        margin: const EdgeInsets.all(20),
-        child: SafeArea(
-          child: _getPage(_currentIndex),
-        ),
+      body: SafeArea(
+        child: _getPage(_currentIndex),
       ),
       bottomNavigationBar: SalomonBottomBar(
         currentIndex: _currentIndex,
@@ -27,7 +24,7 @@ class _BotomMenuState extends State<BotomMenu> {
           SalomonBottomBarItem(
             icon: const Icon(Icons.home),
             title: const Text("Inicio"),
-            selectedColor: Colors.indigo,
+            selectedColor: Colors.green,
           ),
           SalomonBottomBarItem(
             icon: const Icon(Icons.checklist_outlined),
@@ -37,7 +34,7 @@ class _BotomMenuState extends State<BotomMenu> {
           SalomonBottomBarItem(
             icon: const Icon(Icons.bar_chart),
             title: const Text("Estadisticas"),
-            selectedColor: Colors.pinkAccent,
+            selectedColor: Colors.green,
           ),
         ],
       ),

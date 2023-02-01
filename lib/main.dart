@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Gestión de Tareas',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.indigo,
         textTheme: const TextTheme(
           headline1: TextStyle(fontSize: 24.0, fontWeight: FontWeight.w500),
         ),
