@@ -6,7 +6,7 @@ import 'package:nextline_app/utils/utils.dart';
 
 class CardTask extends StatelessWidget {
   String? title;
-  String? description;
+
   bool? completed;
   DateTime? dueDate;
 
@@ -14,7 +14,6 @@ class CardTask extends StatelessWidget {
     Key? key,
     required this.title,
     required this.completed,
-    required this.description,
     required this.dueDate,
   }) : super(key: key);
 
@@ -29,7 +28,7 @@ class CardTask extends StatelessWidget {
       color: completed! ? secondaryColor : primaryColor,
       child: Container(
         padding: const EdgeInsets.fromLTRB(20, 10, 10, 10),
-        height: _responsive.hp(28.0),
+        height: _responsive.hp(25.0),
         width: double.infinity,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -113,25 +112,9 @@ class CardTask extends StatelessWidget {
                     ],
                   ),
                 ),
-                // IconButton(
-                //   onPressed: () {},
-                //   icon: const FaIcon(
-                //     FontAwesomeIcons.ellipsisVertical,
-                //     size: 18.0,
-                //     color: Colors.grey,
-                //   ),
-                // ),
               ],
             ),
             const SizedBox(height: 10),
-            Text(
-              description!,
-              style: TextStyle(
-                fontSize: 14,
-                color: Colors.grey[600],
-                fontWeight: FontWeight.w500,
-              ),
-            ),
             completed!
                 ? const Chip(
                     elevation: 0,
@@ -146,7 +129,6 @@ class CardTask extends StatelessWidget {
                     backgroundColor: Colors.redAccent,
                   ),
             const Divider(),
-            const SizedBox(height: 10),
             Row(
               children: [
                 const FaIcon(
@@ -155,14 +137,23 @@ class CardTask extends StatelessWidget {
                   size: 16,
                 ),
                 const SizedBox(width: 10),
-                Text(
-                  formattDateNumber(dueDate),
-                  style: const TextStyle(
-                    fontSize: 14,
-                    color: Colors.black,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
+                dueDate != null
+                    ? Text(
+                        formattDateNumber(dueDate),
+                        style: const TextStyle(
+                          fontSize: 14,
+                          color: Colors.black,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      )
+                    : const Text(
+                        'Sin fecha',
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: Colors.black,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
               ],
             ),
           ],

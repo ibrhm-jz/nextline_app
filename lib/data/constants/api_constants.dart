@@ -5,3 +5,9 @@ Map<String, String> jsonHeaders = {
   "Authorization": "Bearer $bearerToken",
   'Content-type': 'application/json'
 };
+Map<String, String> headers = {
+  "Authorization": "Bearer $bearerToken",
+};
+Map<String, String> queryToken = {
+  'token ': bearerToken,
+};

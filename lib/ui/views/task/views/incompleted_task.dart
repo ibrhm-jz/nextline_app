@@ -104,42 +104,45 @@ class _IncompleteTaskPageState extends State<IncompleteTaskPage> {
 
   Widget buildView(BuildContext context) {
     TaskProvider _watch = context.watch<TaskProvider>();
-    return Flexible(
-      child: ListView.builder(
-        itemCount: _watch.getTask.length,
-        itemBuilder: (context, i) {
-          TaskModel _task = _watch.getTask[i];
-          return Column(
-            children: [
-              GestureDetector(
-                onTap: () => showCupertinoModalBottomSheet<void>(
-                  context: context,
-                  enableDrag: true,
-                  isDismissible: true,
-                  builder: (BuildContext context) {
-                    return EditTask(
-                      title: _task.title!,
-                      comments: _task.comments!,
-                      completed: _task.getCompleted(),
-                      description: _task.description!,
-                      tags: _task.tags!,
-                      date: formattDateNumber(_task.dueDate),
-                      update: true,
-                    );
-                  },
-                ),
-                child: CardTask(
-                  title: _task.title,
-                  completed: _task.getCompleted(),
-                  description: _task.description,
-                  dueDate: _task.dueDate,
-                ),
+    return _watch.getTask.isEmpty
+        ? const Expanded(
+            child: Center(
+              child: Text('No hay tareas incompletas.'),
+            ),
+          )
+        : Flexible(
+            child: Consumer<TaskProvider>(
+              builder: (_, data, __) => ListView.builder(
+                itemCount: data.getTask.length,
+                itemBuilder: (context, i) {
+                  final item = data.getTask[i];
+                  return Column(
+                    children: [
+                      GestureDetector(
+                        onTap: () => showCupertinoModalBottomSheet<void>(
+                          context: context,
+                          enableDrag: true,
+                          isDismissible: true,
+                          builder: (BuildContext context) {
+                            return EditTask(
+                              id: item.id.toString(),
+                              update: true,
+                              index: i,
+                            );
+                          },
+                        ),
+                        child: CardTask(
+                          title: item.title,
+                          completed: item.getCompleted(),
+                          dueDate: item.dueDate,
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                    ],
+                  );
+                },
               ),
-              const SizedBox(height: 10),
-            ],
+            ),
           );
-        },
-      ),
-    );
   }
 }
