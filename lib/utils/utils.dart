@@ -5,7 +5,11 @@ String formattDateNumber(date) {
   return dateTime;
 }
 
-String formattDateSendApi(date) {
-  String dateTime = DateFormat("yyyy-MM-dd").format(date);
-  return dateTime;
+formattDateSendApi(date) {
+  if (date != null) {
+    String dateTime = DateFormat("yyyy-MM-dd").format(date);
+    return dateTime;
+  } else {
+    return null;
+  }
 }

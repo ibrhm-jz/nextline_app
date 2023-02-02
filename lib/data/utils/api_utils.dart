@@ -1,4 +1,4 @@
-import 'package:nextline_app/data/constants/api_constants.dart';
+import 'package:nextline_app/data/constants/api_routes.dart';
 
 Uri buildUri(String path, {Map<String, String>? params}) {
   Uri baseUri = Uri.parse(baseUrl);

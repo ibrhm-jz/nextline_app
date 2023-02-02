@@ -56,16 +56,33 @@ class _EditTaskState extends State<EditTask> {
         await context.read<TaskProvider>().serializeData();
     TaskModel response =
         await _taskRepository.updateTask(body: _dataJson, id: widget.id);
-    context.read<TaskProvider>().updateTask(task: response, i: widget.index!);
+    await context
+        .read<TaskProvider>()
+        .updateTask(task: response, i: widget.index!);
+    Navigator.pop(context);
     context.read<TaskProvider>().clean();
-    Navigator.pop(context, true);
   }
 
-  _createTask(String id) async {
-    TaskRepository _taskRepository = TaskRepository();
-    Map<String, String> _dataJson =
-        await context.read<TaskProvider>().serializeData();
-    await _taskRepository.createTask(body: _dataJson);
+  _createTask() async {
+    try {
+      TaskRepository _taskRepository = TaskRepository();
+      Map<String, String> _dataJson =
+          await context.read<TaskProvider>().serializeData();
+      TaskModel response = await _taskRepository.createTask(body: _dataJson);
+
+      await context.read<TaskProvider>().createTask(task: response);
+      Navigator.pop(context);
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Future<void> _saveTask() async {
+    if (widget.update) {
+      await _updateTask();
+    } else {
+      await _createTask();
+    }
   }
 
   @override
@@ -116,7 +133,7 @@ class _EditTaskState extends State<EditTask> {
                             onPressed: () async {
                               var valid = (_formKey.currentState!.validate());
                               if (!valid) return;
-                              await _updateTask();
+                              await _saveTask();
                             },
                           ),
                         ],
@@ -170,7 +187,12 @@ class _EditTaskState extends State<EditTask> {
                                   alignment: Alignment.centerLeft,
                                   child: GestureDetector(
                                     onTap: () => pickDateDialog(context),
-                                    child: Chip(label: Text(_watch.chosenDate)),
+                                    child: Chip(
+                                      label: _watch.selectTime == null
+                                          ? Text('Elegir Fecha')
+                                          : Text(formattDateNumber(
+                                              _watch.selectTime)),
+                                    ),
                                   ),
                                 ),
                                 Expanded(child: Container()),

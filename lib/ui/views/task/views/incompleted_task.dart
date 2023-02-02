@@ -91,7 +91,9 @@ class _IncompleteTaskPageState extends State<IncompleteTaskPage> {
             enableDrag: true,
             isDismissible: true,
             builder: (BuildContext context) {
-              return const EditTask();
+              return const EditTask(
+                update: false,
+              );
             },
           );
         },
@@ -103,16 +105,13 @@ class _IncompleteTaskPageState extends State<IncompleteTaskPage> {
   }
 
   Widget buildView(BuildContext context) {
-    TaskProvider _watch = context.watch<TaskProvider>();
-    return _watch.getTask.isEmpty
-        ? const Expanded(
-            child: Center(
-              child: Text('No hay tareas incompletas.'),
-            ),
-          )
-        : Flexible(
-            child: Consumer<TaskProvider>(
-              builder: (_, data, __) => ListView.builder(
+    return Flexible(
+      child: Consumer<TaskProvider>(
+        builder: (_, data, __) => data.getTask.isEmpty
+            ? const Center(
+                child: Text('No hay tareas incompletas.'),
+              )
+            : ListView.builder(
                 itemCount: data.getTask.length,
                 itemBuilder: (context, i) {
                   final item = data.getTask[i];
@@ -132,6 +131,8 @@ class _IncompleteTaskPageState extends State<IncompleteTaskPage> {
                           },
                         ),
                         child: CardTask(
+                          index: i,
+                          id: item.id,
                           title: item.title,
                           completed: item.getCompleted(),
                           dueDate: item.dueDate,
@@ -142,7 +143,7 @@ class _IncompleteTaskPageState extends State<IncompleteTaskPage> {
                   );
                 },
               ),
-            ),
-          );
+      ),
+    );
   }
 }

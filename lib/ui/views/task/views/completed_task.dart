@@ -7,7 +7,6 @@ import 'package:nextline_app/data/repository/task_repository.dart';
 import 'package:nextline_app/ui/views/task/skelentons/skelenton_card.dart';
 import 'package:nextline_app/ui/views/task/views/edit_task.dart';
 import 'package:nextline_app/ui/views/task/widgets/card_task.dart';
-import 'package:nextline_app/utils/utils.dart';
 import 'package:provider/provider.dart';
 
 class CompletedTaskPage extends StatefulWidget {
@@ -87,43 +86,45 @@ class _CompletedTaskPageState extends State<CompletedTaskPage> {
   }
 
   Widget buildView(BuildContext context) {
-    TaskProvider _watch = context.watch<TaskProvider>();
-    return _watch.getTask.isEmpty
-        ? const Expanded(
-            child: Center(
-              child: Text('No hay tareas completadas.'),
-            ),
-          )
-        : Flexible(
-            child: ListView.builder(
-              itemCount: _watch.getTask.length,
-              itemBuilder: (context, i) {
-                TaskModel _task = _watch.getTask[i];
-                return Column(
-                  children: [
-                    GestureDetector(
-                      onTap: () => showCupertinoModalBottomSheet<void>(
-                        context: context,
-                        enableDrag: true,
-                        isDismissible: true,
-                        builder: (BuildContext context) {
-                          return EditTask(
-                            id: _task.id.toString(),
-                            update: true,
-                          );
-                        },
+    return Flexible(
+      child: Consumer<TaskProvider>(
+        builder: (_, data, __) => data.getTask.isEmpty
+            ? const Center(
+                child: Text('No hay tareas completadas.'),
+              )
+            : ListView.builder(
+                itemCount: data.getTask.length,
+                itemBuilder: (context, i) {
+                  TaskModel _task = data.getTask[i];
+                  return Column(
+                    children: [
+                      GestureDetector(
+                        onTap: () => showCupertinoModalBottomSheet<void>(
+                          context: context,
+                          enableDrag: true,
+                          isDismissible: true,
+                          builder: (BuildContext context) {
+                            return EditTask(
+                              id: _task.id.toString(),
+                              index: i,
+                              update: true,
+                            );
+                          },
+                        ),
+                        child: CardTask(
+                          index: i,
+                          id: _task.id,
+                          title: _task.title,
+                          completed: _task.getCompleted(),
+                          dueDate: _task.dueDate,
+                        ),
                       ),
-                      child: CardTask(
-                        title: _task.title,
-                        completed: _task.getCompleted(),
-                        dueDate: _task.dueDate,
-                      ),
-                    ),
-                    const SizedBox(height: 10),
-                  ],
-                );
-              },
-            ),
-          );
+                      const SizedBox(height: 10),
+                    ],
+                  );
+                },
+              ),
+      ),
+    );
   }
 }

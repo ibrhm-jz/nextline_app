@@ -9,7 +9,7 @@ class TaskModel {
   TaskModel({
     required this.id,
     required this.title,
-    required this.isCompleted,
+    this.isCompleted = 0,
     this.dueDate,
     this.comments,
     this.description,
@@ -19,7 +19,8 @@ class TaskModel {
   TaskModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     title = json['title'];
-    isCompleted = json['is_completed'] == 'false' ? 1 : 0;
+    isCompleted = int.parse(json['is_completed'].toString());
+
     dueDate =
         json['due_date'] != null ? DateTime.parse(json['due_date']) : null;
     comments = json.containsKey('comments') ? json['comments'] : '';

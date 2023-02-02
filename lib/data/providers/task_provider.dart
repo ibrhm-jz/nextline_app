@@ -5,14 +5,13 @@ import 'package:nextline_app/utils/utils.dart';
 
 class TaskProvider with ChangeNotifier {
   List<TaskModel> taskList = [];
-
   TextEditingController titleController = TextEditingController();
   TextEditingController commentsController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
   TextEditingController tagsController = TextEditingController();
   bool isCompleted = false;
   String chosenDate = 'Elegir fecha';
-  DateTime selectTime = DateTime.now();
+  DateTime? selectTime;
   List<TaskModel> get getTask => taskList;
   TaskModel getTaskIndividual(int index) => taskList[index];
   setListIncompleteTask(List<TaskModel> _tasks) {
@@ -66,39 +65,44 @@ class TaskProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> creteTask({TaskModel? task}) async {
-    taskList.add(TaskModel(
-      id: task!.id,
-      title: task.title,
-      isCompleted: task.isCompleted,
-      tags: task.tags,
-      comments: task.comments,
-      description: task.description,
-      dueDate: task.dueDate,
-    ));
-    notifyListeners();
-  }
+  // Future<void> creteTask({TaskModel? task}) async {
+  //   print(task!.isCompleted);
+  //   taskList.add(TaskModel(
+  //     id: task.id,
+  //     title: task.title,
+
+  //     // dueDate: task.dueDate ?? null,
+  //   ));
+  //   notifyListeners();
+  // }
 
   Future<void> updateTask({required TaskModel? task, required int i}) async {
+    int completed = taskList[i].isCompleted!;
     taskList[i].title = task!.title;
     taskList[i].isCompleted = task.isCompleted;
     taskList[i].tags = task.tags;
     taskList[i].comments = task.comments;
     taskList[i].description = task.description;
     taskList[i].dueDate = task.dueDate;
+    if (task.isCompleted != completed) taskList.removeAt(i);
     notifyListeners();
   }
 
-  Future<void> createTask({required TaskModel? task, required int i}) async {
-    // taskList.add(TaskModel(id: id, title: title, isCompleted: isCompleted));
+  Future<void> deleteTask({int? index}) async {
+    taskList.removeAt(index!);
+    notifyListeners();
+  }
+
+  Future<void> createTask({required TaskModel task}) async {
+    taskList.add(task);
     notifyListeners();
   }
 
   Future<Map<String, String>> serializeData() async {
     Map<String, String> body = {
       'title': titleController.text,
-      'is_completed': isCompleted.toString(),
-      'due_date': formattDateSendApi(selectTime),
+      'is_completed': isCompleted ? '1' : '0',
+      // selectTime != null ? 'due_date' : formattDateSendApi(selectTime): '',
       'comments': commentsController.text,
       'description': descriptionController.text,
       'tags': tagsController.text,
@@ -112,6 +116,8 @@ class TaskProvider with ChangeNotifier {
     commentsController.clear();
     descriptionController.clear();
     tagsController.clear();
+    chosenDate = "Elegir Fecha";
+    selectTime = null;
     isCompleted = false;
   }
 }
