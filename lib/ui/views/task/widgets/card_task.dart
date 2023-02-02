@@ -46,14 +46,81 @@ class CardTask extends StatelessWidget {
                     fontWeight: FontWeight.w500,
                   ),
                 ),
-                IconButton(
-                  onPressed: () {},
-                  icon: const FaIcon(
-                    FontAwesomeIcons.ellipsisVertical,
-                    size: 18.0,
-                    color: Colors.grey,
+                Theme(
+                  data: Theme.of(context).copyWith(
+                    cardColor: Colors.white,
+                  ),
+                  child: PopupMenuButton<String>(
+                    elevation: 0,
+                    icon: FaIcon(
+                      FontAwesomeIcons.ellipsisVertical,
+                      color: Colors.grey[500],
+                      size: 16,
+                    ),
+                    onSelected: (value) async {
+                      // if (value == "delete") {}
+                      // if (value == "complete") {}
+                    },
+                    itemBuilder: (context) => [
+                      PopupMenuItem(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: const [
+                            Text(
+                              "Eliminar tarea",
+                              style: TextStyle(
+                                // color: Colors.grey[600],
+                                fontSize: 14,
+                              ),
+                            ),
+                            SizedBox(width: 20),
+                            Expanded(
+                              child: Icon(
+                                FontAwesomeIcons.trash,
+                                color: Colors.red,
+                                size: 16,
+                              ),
+                            ),
+                          ],
+                        ),
+                        value: 'delete',
+                      ),
+                      PopupMenuItem(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: const [
+                            Text(
+                              "Completado",
+                              style: TextStyle(
+                                // color: Colors.grey[600],
+                                fontSize: 14,
+                              ),
+                            ),
+                            SizedBox(width: 30),
+                            Expanded(
+                              child: Icon(
+                                FontAwesomeIcons.checkDouble,
+                                // color: Colors.grey[600],
+                                size: 16,
+                              ),
+                            ),
+                          ],
+                        ),
+                        value: 'complete',
+                      ),
+                    ],
                   ),
                 ),
+                // IconButton(
+                //   onPressed: () {},
+                //   icon: const FaIcon(
+                //     FontAwesomeIcons.ellipsisVertical,
+                //     size: 18.0,
+                //     color: Colors.grey,
+                //   ),
+                // ),
               ],
             ),
             const SizedBox(height: 10),

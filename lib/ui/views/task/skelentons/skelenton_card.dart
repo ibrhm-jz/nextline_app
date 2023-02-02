@@ -24,7 +24,7 @@ class SkeletonCard extends StatelessWidget {
         ],
       ),
       child: Container(
-        margin: const EdgeInsets.only(top: 20),
+        margin: const EdgeInsets.only(top: 0),
         child: ListView.builder(
           physics: const NeverScrollableScrollPhysics(),
           itemCount: 5,

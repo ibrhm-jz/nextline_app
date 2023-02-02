@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
         builder: (context, _) {
           return MaterialApp(
             debugShowCheckedModeBanner: false,
-            supportedLocales: const [Locale('es'), Locale('en')],
+            // supportedLocales: const [Locale('es'), Locale('en')],
             title: 'Gestión de Tareas',
             theme: ThemeData(
               visualDensity: VisualDensity.adaptivePlatformDensity,

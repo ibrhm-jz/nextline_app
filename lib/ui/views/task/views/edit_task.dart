@@ -76,10 +76,15 @@ class _EditTaskState extends State<EditTask> {
                       Navigator.pop(context);
                     },
                   ),
-                  Text(
-                    'Agregar Tarea',
-                    style: Theme.of(context).textTheme.headline1,
-                  ),
+                  widget.update
+                      ? Text(
+                          'Editar Tarea',
+                          style: Theme.of(context).textTheme.headline1,
+                        )
+                      : Text(
+                          'Agregar Tarea',
+                          style: Theme.of(context).textTheme.headline1,
+                        ),
                   IconButton(
                     icon: const FaIcon(
                       FontAwesomeIcons.check,

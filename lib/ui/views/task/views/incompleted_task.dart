@@ -85,6 +85,7 @@ class _IncompleteTaskPageState extends State<IncompleteTaskPage> {
           )),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
+          context.read<TaskProvider>().clean();
           showCupertinoModalBottomSheet<void>(
             context: context,
             enableDrag: true,

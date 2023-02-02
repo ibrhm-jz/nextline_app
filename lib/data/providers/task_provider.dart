@@ -62,4 +62,14 @@ class TaskProvider with ChangeNotifier {
     isCompleted = value;
     notifyListeners();
   }
+
+  clean() {
+    titleController.clear();
+    commentsController.clear();
+    descriptionController.clear();
+    tagsController.clear();
+    isCompleted = false;
+    chosenDate = 'Elegir fecha';
+    selectTime = DateTime.now();
+  }
 }
