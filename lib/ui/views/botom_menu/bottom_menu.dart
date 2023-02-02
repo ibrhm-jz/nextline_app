@@ -25,17 +25,17 @@ class _BotomMenuState extends State<BotomMenu> {
           SalomonBottomBarItem(
             icon: const Icon(Icons.home),
             title: const Text("Inicio"),
-            selectedColor: Colors.greenAccent,
+            selectedColor: Colors.indigo,
           ),
           SalomonBottomBarItem(
             icon: const Icon(Icons.checklist_outlined),
             title: const Text("Completado"),
-            selectedColor: Colors.greenAccent,
+            selectedColor: Colors.indigo,
           ),
           SalomonBottomBarItem(
             icon: const Icon(Icons.bar_chart),
             title: const Text("Estadisticas"),
-            selectedColor: Colors.greenAccent,
+            selectedColor: Colors.indigo,
           ),
         ],
       ),

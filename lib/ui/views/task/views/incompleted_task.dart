@@ -94,7 +94,7 @@ class _IncompleteTaskPageState extends State<IncompleteTaskPage> {
           );
         },
         elevation: 1,
-        backgroundColor: Colors.greenAccent,
+        backgroundColor: Colors.indigo,
         child: const Icon(Icons.add),
       ),
     );

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:nextline_app/ui/widgets/fields/default_prefix_field.dart';
+import 'package:nextline_app/utils/utils.dart';
 
 class EditTask extends StatefulWidget {
   const EditTask({
@@ -18,6 +19,8 @@ class _EditTaskState extends State<EditTask> {
   TextEditingController _commentsController = TextEditingController();
   TextEditingController _descriptionController = TextEditingController();
   TextEditingController _tagsController = TextEditingController();
+  String? _chosenDate = 'Elegir Fecha';
+  DateTime? _selectedDate = DateTime.now();
   @override
   void initState() {
     super.initState();
@@ -75,7 +78,7 @@ class _EditTaskState extends State<EditTask> {
                       icon: Icons.title,
                       validator: (String? value) {
                         if (value!.isEmpty) {
-                          return 'El Nombre es Obligatorio';
+                          return 'El Titulo es Obligatorio';
                         }
                         return null;
                       },
@@ -86,12 +89,6 @@ class _EditTaskState extends State<EditTask> {
                       hintText: 'Comentarios',
                       maxLines: 2,
                       icon: Icons.comment_sharp,
-                      validator: (String? value) {
-                        if (value!.isEmpty) {
-                          return 'El Nombre es Obligatorio';
-                        }
-                        return null;
-                      },
                     ),
                     const SizedBox(height: 20),
                     DefaultPrefixField(
@@ -99,29 +96,23 @@ class _EditTaskState extends State<EditTask> {
                       hintText: 'Descripcion',
                       maxLines: 2,
                       icon: Icons.description,
-                      validator: (String? value) {
-                        if (value!.isEmpty) {
-                          return 'El Nombre es Obligatorio';
-                        }
-                        return null;
-                      },
                     ),
                     const SizedBox(height: 20),
                     DefaultPrefixField(
                       controller: _tagsController,
                       hintText: 'Tags',
                       icon: Icons.tag,
-                      validator: (String? value) {
-                        if (value!.isEmpty) {
-                          return 'El Nombre es Obligatorio';
-                        }
-                        return null;
-                      },
                     ),
                     const SizedBox(height: 20),
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      mainAxisAlignment: MainAxisAlignment.start,
                       children: [
+                        Expanded(
+                          child: GestureDetector(
+                            onTap: () => pickDateDialog(context),
+                            child: Text(_chosenDate!),
+                          ),
+                        ),
                         const Text('Completada'),
                         Checkbox(
                           checkColor: Colors.white,
@@ -144,5 +135,24 @@ class _EditTaskState extends State<EditTask> {
         ),
       ),
     );
+  }
+
+  void pickDateDialog(BuildContext context) {
+    showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime.utc(
+          DateTime.now().year - 1, DateTime.now().month, DateTime.now().day),
+      lastDate: DateTime.utc(
+          DateTime.now().year + 1, DateTime.now().month, DateTime.now().day),
+    ).then((pickedDate) {
+      if (pickedDate == null) {
+        return 'Selecciona fecha';
+      }
+      setState(() {
+        _selectedDate = pickedDate;
+        _chosenDate = formattDateNumber(_selectedDate);
+      });
+    });
   }
 }

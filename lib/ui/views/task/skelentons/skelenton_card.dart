@@ -35,7 +35,9 @@ class SkeletonCard extends StatelessWidget {
               height: _responsive.hp(28.0),
               width: double.infinity,
               decoration: BoxDecoration(
-                  color: primaryColor, borderRadius: BorderRadius.circular(15)),
+                color: const Color.fromARGB(255, 236, 233, 233),
+                borderRadius: BorderRadius.circular(15),
+              ),
               child: SkeletonItem(
                 child: Column(
                   children: [
@@ -45,17 +47,18 @@ class SkeletonCard extends StatelessWidget {
                         Expanded(
                           child: SkeletonParagraph(
                             style: SkeletonParagraphStyle(
-                                lines: 3,
-                                spacing: 6,
-                                lineStyle: SkeletonLineStyle(
-                                  randomLength: true,
-                                  height: 10,
-                                  borderRadius: BorderRadius.circular(8),
-                                  minLength:
-                                      MediaQuery.of(context).size.width / 6,
-                                  maxLength:
-                                      MediaQuery.of(context).size.width / 3,
-                                )),
+                              lines: 3,
+                              spacing: 6,
+                              lineStyle: SkeletonLineStyle(
+                                randomLength: true,
+                                height: 10,
+                                borderRadius: BorderRadius.circular(8),
+                                minLength:
+                                    MediaQuery.of(context).size.width / 6,
+                                maxLength:
+                                    MediaQuery.of(context).size.width / 3,
+                              ),
+                            ),
                           ),
                         )
                       ],
@@ -63,14 +66,15 @@ class SkeletonCard extends StatelessWidget {
                     const SizedBox(height: 12),
                     SkeletonParagraph(
                       style: SkeletonParagraphStyle(
-                          lines: 3,
-                          spacing: 6,
-                          lineStyle: SkeletonLineStyle(
-                            randomLength: true,
-                            height: 10,
-                            borderRadius: BorderRadius.circular(8),
-                            minLength: MediaQuery.of(context).size.width / 2,
-                          )),
+                        lines: 3,
+                        spacing: 6,
+                        lineStyle: SkeletonLineStyle(
+                          randomLength: true,
+                          height: 10,
+                          borderRadius: BorderRadius.circular(8),
+                          minLength: MediaQuery.of(context).size.width / 2,
+                        ),
+                      ),
                     ),
                     const SizedBox(height: 20),
                     Row(

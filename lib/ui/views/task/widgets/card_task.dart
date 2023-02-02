@@ -26,7 +26,7 @@ class CardTask extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(15.0),
       ),
-      color: primaryColor,
+      color: completed! ? secondaryColor : primaryColor,
       child: Container(
         padding: const EdgeInsets.fromLTRB(20, 10, 10, 10),
         height: _responsive.hp(28.0),

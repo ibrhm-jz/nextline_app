@@ -8,18 +8,15 @@ class TaskProvider with ChangeNotifier {
   setListIncompleteTask(List<TaskModel> _tasks) {
     _tasks.removeWhere((i) => i.getCompleted() == true);
     _taskList = _tasks;
-    notifyListeners();
   }
 
   setListCompletedTask(List<TaskModel> _tasks) {
     _tasks.removeWhere((i) => i.getCompleted() == false);
     _taskList = _tasks;
-    notifyListeners();
   }
 
   setListTask(List<TaskModel> _tasks) {
     _taskList = _tasks;
-    notifyListeners();
   }
 
   orderAscendent() {

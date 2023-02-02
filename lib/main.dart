@@ -9,7 +9,6 @@ import 'package:nextline_app/ui/views/task/views/incompleted_task.dart';
 import 'package:provider/provider.dart';
 
 void main() {
-  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   runApp(const MyApp());
 }
 
