@@ -7,6 +7,7 @@ import 'package:nextline_app/data/repository/task_repository.dart';
 import 'package:nextline_app/ui/views/task/skelentons/skelenton_card.dart';
 import 'package:nextline_app/ui/views/task/views/edit_task.dart';
 import 'package:nextline_app/ui/views/task/widgets/card_task.dart';
+import 'package:nextline_app/utils/utils.dart';
 import 'package:provider/provider.dart';
 
 class IncompleteTaskPage extends StatefulWidget {
@@ -89,7 +90,7 @@ class _IncompleteTaskPageState extends State<IncompleteTaskPage> {
             enableDrag: true,
             isDismissible: true,
             builder: (BuildContext context) {
-              return EditTask();
+              return const EditTask();
             },
           );
         },
@@ -109,11 +110,29 @@ class _IncompleteTaskPageState extends State<IncompleteTaskPage> {
           TaskModel _task = _watch.getTask[i];
           return Column(
             children: [
-              CardTask(
-                title: _task.title,
-                completed: _task.getCompleted(),
-                description: _task.description,
-                dueDate: _task.dueDate,
+              GestureDetector(
+                onTap: () => showCupertinoModalBottomSheet<void>(
+                  context: context,
+                  enableDrag: true,
+                  isDismissible: true,
+                  builder: (BuildContext context) {
+                    return EditTask(
+                      title: _task.title!,
+                      comments: _task.comments!,
+                      completed: _task.getCompleted(),
+                      description: _task.description!,
+                      tags: _task.tags!,
+                      date: formattDateNumber(_task.dueDate),
+                      update: true,
+                    );
+                  },
+                ),
+                child: CardTask(
+                  title: _task.title,
+                  completed: _task.getCompleted(),
+                  description: _task.description,
+                  dueDate: _task.dueDate,
+                ),
               ),
               const SizedBox(height: 10),
             ],

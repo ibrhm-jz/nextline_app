@@ -1,12 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+import 'package:nextline_app/data/providers/task_provider.dart';
 import 'package:nextline_app/ui/widgets/fields/default_prefix_field.dart';
 import 'package:nextline_app/utils/utils.dart';
+import 'package:provider/provider.dart';
 
 class EditTask extends StatefulWidget {
+  final String title;
+  final String comments;
+  final String description;
+  final String date;
+  final String tags;
+  final bool completed;
+  final bool update;
   const EditTask({
     Key? key,
+    this.title = "",
+    this.comments = "",
+    this.description = "",
+    this.date = "Elegir fecha",
+    this.tags = "",
+    this.completed = false,
+    this.update = false,
   }) : super(key: key);
 
   @override
@@ -15,19 +31,31 @@ class EditTask extends StatefulWidget {
 
 class _EditTaskState extends State<EditTask> {
   late final _formKey = GlobalKey<FormState>();
-  TextEditingController _titleController = TextEditingController();
-  TextEditingController _commentsController = TextEditingController();
-  TextEditingController _descriptionController = TextEditingController();
-  TextEditingController _tagsController = TextEditingController();
   String? _chosenDate = 'Elegir Fecha';
   DateTime? _selectedDate = DateTime.now();
+  late TaskProvider _watch;
   @override
   void initState() {
+    _initData();
     super.initState();
+  }
+
+  _initData() {
+    if (widget.update) {
+      context.read<TaskProvider>().onEditTask(
+            title: widget.title,
+            comments: widget.comments,
+            description: widget.description,
+            completed: widget.completed,
+            tags: widget.tags,
+            date: widget.date,
+          );
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    _watch = Provider.of<TaskProvider>(context);
     return Material(
       child: SingleChildScrollView(
         controller: ModalScrollController.of(context),
@@ -58,7 +86,10 @@ class _EditTaskState extends State<EditTask> {
                       color: Colors.grey,
                       size: 20,
                     ),
-                    onPressed: () {},
+                    onPressed: () {
+                      var valid = (_formKey.currentState!.validate());
+                      if (!valid) return;
+                    },
                   ),
                 ],
               ),
@@ -73,7 +104,7 @@ class _EditTaskState extends State<EditTask> {
                 child: Column(
                   children: [
                     DefaultPrefixField(
-                      controller: _titleController,
+                      controller: _watch.titleController,
                       hintText: 'Titulo',
                       icon: Icons.title,
                       validator: (String? value) {
@@ -85,43 +116,45 @@ class _EditTaskState extends State<EditTask> {
                     ),
                     const SizedBox(height: 20),
                     DefaultPrefixField(
-                      controller: _commentsController,
+                      controller: _watch.commentsController,
                       hintText: 'Comentarios',
                       maxLines: 2,
                       icon: Icons.comment_sharp,
                     ),
                     const SizedBox(height: 20),
                     DefaultPrefixField(
-                      controller: _descriptionController,
+                      controller: _watch.descriptionController,
                       hintText: 'Descripcion',
                       maxLines: 2,
                       icon: Icons.description,
                     ),
                     const SizedBox(height: 20),
                     DefaultPrefixField(
-                      controller: _tagsController,
+                      controller: _watch.tagsController,
                       hintText: 'Tags',
                       icon: Icons.tag,
                     ),
                     const SizedBox(height: 20),
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Expanded(
+                        Align(
+                          alignment: Alignment.centerLeft,
                           child: GestureDetector(
                             onTap: () => pickDateDialog(context),
-                            child: Text(_chosenDate!),
+                            child: Chip(label: Text(_watch.chosenDate)),
                           ),
                         ),
+                        Expanded(child: Container()),
                         const Text('Completada'),
                         Checkbox(
                           checkColor: Colors.white,
                           // activeColor: ColorSecondary,
-                          value: true,
+                          value: _watch.isCompleted,
                           onChanged: (bool? value) {
-                            // setState(() {
-                            //   isChecked = value!;
-                            // });
+                            context
+                                .read<TaskProvider>()
+                                .setCompleted(value: value!);
                           },
                         ),
                       ],
@@ -149,10 +182,9 @@ class _EditTaskState extends State<EditTask> {
       if (pickedDate == null) {
         return 'Selecciona fecha';
       }
-      setState(() {
-        _selectedDate = pickedDate;
-        _chosenDate = formattDateNumber(_selectedDate);
-      });
+      context
+          .read<TaskProvider>()
+          .onDateEdit(date: formattDateNumber(pickedDate), time: pickedDate);
     });
   }
 }

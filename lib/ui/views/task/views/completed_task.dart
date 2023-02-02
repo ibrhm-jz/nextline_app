@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:nextline_app/data/models/task_model.dart';
 import 'package:nextline_app/data/providers/task_provider.dart';
 import 'package:nextline_app/data/repository/task_repository.dart';
 import 'package:nextline_app/ui/views/task/skelentons/skelenton_card.dart';
+import 'package:nextline_app/ui/views/task/views/edit_task.dart';
 import 'package:nextline_app/ui/views/task/widgets/card_task.dart';
+import 'package:nextline_app/utils/utils.dart';
 import 'package:provider/provider.dart';
 
 class CompletedTaskPage extends StatefulWidget {
@@ -92,11 +95,29 @@ class _CompletedTaskPageState extends State<CompletedTaskPage> {
           TaskModel _task = _watch.getTask[i];
           return Column(
             children: [
-              CardTask(
-                title: _task.title,
-                completed: _task.getCompleted(),
-                description: _task.description,
-                dueDate: _task.dueDate,
+              GestureDetector(
+                onTap: () => showCupertinoModalBottomSheet<void>(
+                  context: context,
+                  enableDrag: true,
+                  isDismissible: true,
+                  builder: (BuildContext context) {
+                    return EditTask(
+                      title: _task.title!,
+                      comments: _task.comments!,
+                      completed: _task.getCompleted(),
+                      description: _task.description!,
+                      tags: _task.tags!,
+                      date: formattDateNumber(_task.dueDate),
+                      update: true,
+                    );
+                  },
+                ),
+                child: CardTask(
+                  title: _task.title,
+                  completed: _task.getCompleted(),
+                  description: _task.description,
+                  dueDate: _task.dueDate,
+                ),
               ),
               const SizedBox(height: 10),
             ],
