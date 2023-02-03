@@ -10,6 +10,6 @@ formattDateSendApi(date) {
     String dateTime = DateFormat("yyyy-MM-dd").format(date);
     return dateTime;
   } else {
-    return null;
+    return date;
   }
 }

@@ -12,8 +12,31 @@ class TaskProvider with ChangeNotifier {
   bool isCompleted = false;
   String chosenDate = 'Elegir fecha';
   DateTime? selectTime;
+
   List<TaskModel> get getTask => taskList;
+  int get getTaskLengt => taskList.length;
+  int get getTaskCompleted {
+    int taskCompleted = 0;
+    for (var item in taskList) {
+      if (item.getCompleted()) taskCompleted++;
+    }
+    return taskCompleted;
+  }
+
+  int get getTaskIncompleted {
+    int taskCompleted = 0;
+    for (var item in taskList) {
+      if (!item.getCompleted()) taskCompleted++;
+    }
+    return taskCompleted;
+  }
+
   TaskModel getTaskIndividual(int index) => taskList[index];
+
+  setListTask(List<TaskModel> _tasks) {
+    taskList = _tasks;
+  }
+
   setListIncompleteTask(List<TaskModel> _tasks) {
     _tasks.removeWhere((i) => i.getCompleted() == true);
     taskList = _tasks;
@@ -24,24 +47,20 @@ class TaskProvider with ChangeNotifier {
     taskList = _tasks;
   }
 
-  setListTask(List<TaskModel> _tasks) {
-    taskList = _tasks;
-  }
-
   onEditTask({
     required String? title,
     String comments = "",
     String description = "",
     String tags = "",
     bool completed = false,
-    String date = '',
+    DateTime? date,
   }) {
     titleController.text = title!;
     commentsController.text = comments;
     descriptionController.text = description;
     tagsController.text = tags;
     isCompleted = completed;
-    chosenDate = date;
+    selectTime = date;
   }
 
   Future<void> orderAscendent() async {
@@ -64,17 +83,6 @@ class TaskProvider with ChangeNotifier {
     isCompleted = value;
     notifyListeners();
   }
-
-  // Future<void> creteTask({TaskModel? task}) async {
-  //   print(task!.isCompleted);
-  //   taskList.add(TaskModel(
-  //     id: task.id,
-  //     title: task.title,
-
-  //     // dueDate: task.dueDate ?? null,
-  //   ));
-  //   notifyListeners();
-  // }
 
   Future<void> updateTask({required TaskModel? task, required int i}) async {
     int completed = taskList[i].isCompleted!;
@@ -99,15 +107,28 @@ class TaskProvider with ChangeNotifier {
   }
 
   Future<Map<String, String>> serializeData() async {
-    Map<String, String> body = {
-      'title': titleController.text,
-      'is_completed': isCompleted ? '1' : '0',
-      // selectTime != null ? 'due_date' : formattDateSendApi(selectTime): '',
-      'comments': commentsController.text,
-      'description': descriptionController.text,
-      'tags': tagsController.text,
-      'token ': bearerToken
-    };
+    Map<String, String> body;
+    if (selectTime != null) {
+      body = {
+        'title': titleController.text,
+        'is_completed': isCompleted ? '1' : '0',
+        'due_date': formattDateSendApi(selectTime),
+        'comments': commentsController.text,
+        'description': descriptionController.text,
+        'tags': tagsController.text,
+        'token ': bearerToken
+      };
+    } else {
+      body = {
+        'title': titleController.text,
+        'is_completed': isCompleted ? '1' : '0',
+        'comments': commentsController.text,
+        'description': descriptionController.text,
+        'tags': tagsController.text,
+        'token ': bearerToken
+      };
+    }
+
     return body;
   }
 

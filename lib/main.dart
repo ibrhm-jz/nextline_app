@@ -41,10 +41,11 @@ class MyApp extends StatelessWidget {
             // home: const TaskPage(),
             initialRoute: '/splash',
             routes: {
-              '/splash': (BuildContext context) => Splash(),
+              '/splash': (BuildContext context) => const Splash(),
               '/home': (BuildContext context) => const BotomMenu(),
               '/incomplete-task': (BuildContext context) =>
                   const IncompleteTaskPage(),
+              '/chart': (BuildContext context) => const BotomMenu(),
             },
           );
         });

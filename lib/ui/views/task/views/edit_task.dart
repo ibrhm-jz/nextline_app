@@ -38,13 +38,11 @@ class _EditTaskState extends State<EditTask> {
       TaskModel _task = await _taskRepository.getTask(id: widget.id);
       context.read<TaskProvider>().onEditTask(
             title: _task.title,
-            comments: _task.comments!,
-            description: _task.description!,
+            comments: _task.comments ?? '',
+            description: _task.description ?? '',
             completed: _task.getCompleted(),
-            tags: _task.tags!,
-            date: _task.dueDate != null
-                ? formattDateNumber(_task.dueDate)
-                : 'Elegir fecha',
+            tags: _task.tags ?? '',
+            date: _task.dueDate,
           );
       setState(() => _loadingTask = false);
     }

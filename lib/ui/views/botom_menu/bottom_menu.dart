@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:nextline_app/ui/views/chart/views/chart.dart';
 import 'package:nextline_app/ui/views/task/views/completed_task.dart';
 import 'package:nextline_app/ui/views/task/views/incompleted_task.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
@@ -49,7 +50,7 @@ class _BotomMenuState extends State<BotomMenu> {
       case 1:
         return const CompletedTaskPage();
       case 2:
-        return const IncompleteTaskPage();
+        return const Chart();
       default:
         return const IncompleteTaskPage();
     }
