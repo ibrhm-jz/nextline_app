@@ -96,6 +96,12 @@ class TaskProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> updateTaskCompleted({required int i}) async {
+    taskList[i].isCompleted = taskList[i].isCompleted == 0 ? 1 : 0;
+    taskList.removeAt(i);
+    notifyListeners();
+  }
+
   Future<void> deleteTask({int? index}) async {
     taskList.removeAt(index!);
     notifyListeners();
@@ -104,6 +110,33 @@ class TaskProvider with ChangeNotifier {
   Future<void> createTask({required TaskModel task}) async {
     taskList.add(task);
     notifyListeners();
+  }
+
+  Future<Map<String, String>> serializeDataComplete(
+      {required TaskModel taskModel}) async {
+    Map<String, String> body;
+    if (taskModel.dueDate != null) {
+      body = {
+        'title': taskModel.title!,
+        'is_completed': taskModel.isCompleted == 0 ? '1' : '0',
+        'due_date': formattDateSendApi(taskModel.dueDate),
+        'comments': taskModel.comments ?? '',
+        'description': taskModel.description ?? '',
+        'tags': taskModel.tags ?? '',
+        'token ': bearerToken
+      };
+    } else {
+      body = {
+        'title': taskModel.title!,
+        'is_completed': taskModel.isCompleted == 0 ? '1' : '0',
+        'comments': taskModel.comments ?? '',
+        'description': taskModel.description ?? '',
+        'tags': taskModel.tags ?? '',
+        'token ': bearerToken
+      };
+    }
+
+    return body;
   }
 
   Future<Map<String, String>> serializeData() async {

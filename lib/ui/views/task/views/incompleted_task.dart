@@ -136,6 +136,7 @@ class _IncompleteTaskPageState extends State<IncompleteTaskPage> {
                           title: item.title,
                           completed: item.getCompleted(),
                           dueDate: item.dueDate,
+                          taskModel: item,
                         ),
                       ),
                       const SizedBox(height: 10),

@@ -117,6 +117,7 @@ class _CompletedTaskPageState extends State<CompletedTaskPage> {
                           title: _task.title,
                           completed: _task.getCompleted(),
                           dueDate: _task.dueDate,
+                          taskModel: _task,
                         ),
                       ),
                       const SizedBox(height: 10),

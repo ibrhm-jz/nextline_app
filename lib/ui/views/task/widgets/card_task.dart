@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:nextline_app/data/models/task_model.dart';
 import 'package:nextline_app/data/providers/task_provider.dart';
 import 'package:nextline_app/data/repository/task_repository.dart';
 import 'package:nextline_app/ui/constants/colors.dart';
@@ -13,7 +14,7 @@ class CardTask extends StatelessWidget {
   String? title;
   bool? completed;
   DateTime? dueDate;
-
+  TaskModel taskModel;
   CardTask({
     Key? key,
     required this.index,
@@ -21,17 +22,27 @@ class CardTask extends StatelessWidget {
     required this.title,
     required this.completed,
     required this.dueDate,
+    required this.taskModel,
   }) : super(key: key);
 
+  late TaskProvider _watch;
   _deleteTask(String id) async {
     TaskRepository _taskRepository = TaskRepository();
     final response = await _taskRepository.deleteTask(id: id);
     return response;
   }
 
+  _completedTask(String id) async {
+    TaskRepository _taskRepository = TaskRepository();
+    Map<String, String> _dataJson =
+        await _watch.serializeDataComplete(taskModel: taskModel);
+    final response = await _taskRepository.updateTask(body: _dataJson, id: id);
+    return response;
+  }
+
   @override
   Widget build(BuildContext context) {
-    TaskProvider _watch = context.watch<TaskProvider>();
+    _watch = context.watch<TaskProvider>();
     Responsive _responsive = Responsive(context);
     return Card(
       elevation: 0,
@@ -76,7 +87,12 @@ class CardTask extends StatelessWidget {
                           _watch.deleteTask(index: index);
                         }
                       }
-                      if (value == "complete") {}
+                      if (value == "complete") {
+                        final status = await _completedTask(id.toString());
+                        if (status != null) {
+                          _watch.updateTaskCompleted(i: index!);
+                        }
+                      }
                     },
                     itemBuilder: (context) => [
                       PopupMenuItem(
