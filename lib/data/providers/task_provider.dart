@@ -64,12 +64,12 @@ class TaskProvider with ChangeNotifier {
   }
 
   Future<void> orderAscendent() async {
-    taskList.sort((a, b) => b.dueDate!.compareTo(a.dueDate!));
+    taskList.sort((a, b) => b.title!.compareTo(a.title!));
     notifyListeners();
   }
 
   Future<void> orderDescendent() async {
-    taskList.sort((a, b) => a.dueDate!.compareTo(b.dueDate!));
+    taskList.sort((a, b) => a.title!.compareTo(b.title!));
     notifyListeners();
   }
 

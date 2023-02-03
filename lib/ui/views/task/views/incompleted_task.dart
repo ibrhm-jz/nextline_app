@@ -7,7 +7,7 @@ import 'package:nextline_app/data/repository/task_repository.dart';
 import 'package:nextline_app/ui/views/task/skelentons/skelenton_card.dart';
 import 'package:nextline_app/ui/views/task/views/edit_task.dart';
 import 'package:nextline_app/ui/views/task/widgets/card_task.dart';
-import 'package:nextline_app/utils/utils.dart';
+import 'package:nextline_app/utils/toast.dart';
 import 'package:provider/provider.dart';
 
 class IncompleteTaskPage extends StatefulWidget {
@@ -42,47 +42,48 @@ class _IncompleteTaskPageState extends State<IncompleteTaskPage> {
     return Scaffold(
       backgroundColor: Colors.white,
       body: Container(
-          margin: const EdgeInsets.all(20),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Tareas incompletas.',
-                    style: Theme.of(context).textTheme.headline1,
-                  ),
-                  IconButton(
-                    onPressed: () {
-                      if (_orderDown) {
-                        context.read<TaskProvider>().orderAscendent();
-                      } else {
-                        context.read<TaskProvider>().orderDescendent();
-                      }
-                      setState(() => _orderDown = !_orderDown);
-                    },
-                    icon: _orderDown
-                        ? const FaIcon(
-                            FontAwesomeIcons.arrowDown19,
-                            color: Colors.grey,
-                            size: 18.0,
-                          )
-                        : const FaIcon(
-                            FontAwesomeIcons.arrowUp19,
-                            color: Colors.grey,
-                            size: 18.0,
-                          ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 20),
-              _taskLoading
-                  ? const Expanded(child: SkeletonCard())
-                  : buildView(context),
-            ],
-          )),
+        margin: const EdgeInsets.all(20),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Tareas incompletas.',
+                  style: Theme.of(context).textTheme.headline1,
+                ),
+                IconButton(
+                  onPressed: () {
+                    if (_orderDown) {
+                      context.read<TaskProvider>().orderAscendent();
+                    } else {
+                      context.read<TaskProvider>().orderDescendent();
+                    }
+                    setState(() => _orderDown = !_orderDown);
+                  },
+                  icon: _orderDown
+                      ? const FaIcon(
+                          FontAwesomeIcons.arrowDown19,
+                          color: Colors.grey,
+                          size: 18.0,
+                        )
+                      : const FaIcon(
+                          FontAwesomeIcons.arrowUp19,
+                          color: Colors.grey,
+                          size: 18.0,
+                        ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 20),
+            _taskLoading
+                ? const Expanded(child: SkeletonCard())
+                : buildView(context),
+          ],
+        ),
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           context.read<TaskProvider>().clean();

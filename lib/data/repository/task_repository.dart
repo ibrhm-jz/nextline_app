@@ -39,7 +39,6 @@ class TaskRepository {
     http.Response response =
         await http.put(_baseUri, body: body, headers: headers);
     final data = jsonDecode(response.body);
-    print(data);
     TaskModel task = TaskModel.fromJson(data['task']);
     return task;
   }

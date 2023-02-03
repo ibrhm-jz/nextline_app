@@ -55,8 +55,10 @@ class _ChartState extends State<Chart> {
                 ? Expanded(child: Center(child: DefaultCircularProgress()))
                 : Container(
                     child: _watch.taskList.isEmpty
-                        ? const Center(
-                            child: Text('Aun no hay datos para mostrar'),
+                        ? const Expanded(
+                            child: Center(
+                              child: Text('Aún no hay datos para mostrar'),
+                            ),
                           )
                         : Column(
                             mainAxisAlignment: MainAxisAlignment.start,

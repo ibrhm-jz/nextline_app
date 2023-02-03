@@ -5,6 +5,7 @@ import 'package:nextline_app/data/providers/task_provider.dart';
 import 'package:nextline_app/data/repository/task_repository.dart';
 import 'package:nextline_app/ui/constants/colors.dart';
 import 'package:nextline_app/ui/utils/responsive.dart';
+import 'package:nextline_app/utils/toast.dart';
 import 'package:nextline_app/utils/utils.dart';
 import 'package:provider/provider.dart';
 
@@ -61,12 +62,15 @@ class CardTask extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  title!,
-                  style: const TextStyle(
-                    fontSize: 20,
-                    color: Colors.black,
-                    fontWeight: FontWeight.w500,
+                Expanded(
+                  child: Text(
+                    title!,
+                    style: const TextStyle(
+                      fontSize: 20,
+                      color: Colors.black,
+                      fontWeight: FontWeight.w500,
+                    ),
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
                 Theme(
@@ -85,12 +89,14 @@ class CardTask extends StatelessWidget {
                         final status = await _deleteTask(id.toString());
                         if (status) {
                           _watch.deleteTask(index: index);
+                          successToast('Se eliminó con éxito');
                         }
                       }
                       if (value == "complete") {
                         final status = await _completedTask(id.toString());
                         if (status != null) {
                           _watch.updateTaskCompleted(i: index!);
+                          successToast('Se actualizó con éxito');
                         }
                       }
                     },
@@ -123,17 +129,26 @@ class CardTask extends StatelessWidget {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           crossAxisAlignment: CrossAxisAlignment.start,
-                          children: const [
-                            Text(
-                              "Completado",
-                              style: TextStyle(
-                                fontSize: 14,
-                              ),
-                            ),
+                          children: [
+                            taskModel.getCompleted()
+                                ? const Text(
+                                    "Volver incompleta",
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                    ),
+                                  )
+                                : const Text(
+                                    "Completado",
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                    ),
+                                  ),
                             SizedBox(width: 30),
                             Expanded(
                               child: Icon(
-                                FontAwesomeIcons.checkDouble,
+                                taskModel.getCompleted()
+                                    ? FontAwesomeIcons.x
+                                    : FontAwesomeIcons.checkDouble,
                                 size: 16,
                               ),
                             ),

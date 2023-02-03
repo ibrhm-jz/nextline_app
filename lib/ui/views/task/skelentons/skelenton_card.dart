@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:nextline_app/ui/constants/colors.dart';
 import 'package:nextline_app/ui/utils/responsive.dart';
 import 'package:skeletons/skeletons.dart';
 

@@ -7,6 +7,7 @@ import 'package:nextline_app/data/repository/task_repository.dart';
 import 'package:nextline_app/ui/utils/responsive.dart';
 import 'package:nextline_app/ui/widgets/fields/default_prefix_field.dart';
 import 'package:nextline_app/ui/widgets/loaders/default_progress_dialog.dart';
+import 'package:nextline_app/utils/toast.dart';
 import 'package:nextline_app/utils/utils.dart';
 import 'package:provider/provider.dart';
 
@@ -49,6 +50,7 @@ class _EditTaskState extends State<EditTask> {
   }
 
   _updateTask() async {
+    setState(() => _loadingTask = true);
     TaskRepository _taskRepository = TaskRepository();
     Map<String, String> _dataJson =
         await context.read<TaskProvider>().serializeData();
@@ -57,21 +59,26 @@ class _EditTaskState extends State<EditTask> {
     await context
         .read<TaskProvider>()
         .updateTask(task: response, i: widget.index!);
+    setState(() => _loadingTask = false);
+    successToast('Se edito con éxito');
     Navigator.pop(context);
     context.read<TaskProvider>().clean();
   }
 
   _createTask() async {
     try {
+      setState(() => _loadingTask = true);
       TaskRepository _taskRepository = TaskRepository();
       Map<String, String> _dataJson =
           await context.read<TaskProvider>().serializeData();
       TaskModel response = await _taskRepository.createTask(body: _dataJson);
 
       await context.read<TaskProvider>().createTask(task: response);
+      setState(() => _loadingTask = false);
+      successToast('Se añadio con éxito');
       Navigator.pop(context);
     } catch (e) {
-      print(e);
+      setState(() => _loadingTask = false);
     }
   }
 
@@ -90,131 +97,140 @@ class _EditTaskState extends State<EditTask> {
     return Material(
       child: SizedBox(
         height: _responsive.height - 100,
-        child: SingleChildScrollView(
-          controller: ModalScrollController.of(context),
-          child: _loadingTask
-              ? SizedBox(
-                  height: _responsive.height - 100,
-                  child: Center(child: DefaultCircularProgress()))
-              : Column(
-                  children: [
+        child: _loadingTask
+            ? SizedBox(
+                height: _responsive.height - 100,
+                child: Center(child: DefaultCircularProgress()))
+            : Scaffold(
+                backgroundColor: Colors.white,
+                appBar: AppBar(
+                  backgroundColor: Colors.white,
+                  elevation: 0,
+                  leading: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: IconButton(
+                      icon: const FaIcon(
+                        FontAwesomeIcons.xmark,
+                        color: Colors.grey,
+                        size: 20,
+                      ),
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                    ),
+                  ),
+                  centerTitle: true,
+                  title: widget.update
+                      ? Text(
+                          'Editar Tarea',
+                          style: Theme.of(context).textTheme.headline1,
+                        )
+                      : Text(
+                          'Agregar Tarea',
+                          style: Theme.of(context).textTheme.headline1,
+                        ),
+                  actions: [
                     Padding(
-                      padding: const EdgeInsets.only(top: 20, bottom: 20),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          IconButton(
-                            icon: const FaIcon(
-                              FontAwesomeIcons.xmark,
-                              color: Colors.grey,
-                              size: 20,
-                            ),
-                            onPressed: () {
-                              Navigator.pop(context);
-                            },
-                          ),
-                          widget.update
-                              ? Text(
-                                  'Editar Tarea',
-                                  style: Theme.of(context).textTheme.headline1,
-                                )
-                              : Text(
-                                  'Agregar Tarea',
-                                  style: Theme.of(context).textTheme.headline1,
-                                ),
-                          IconButton(
-                            icon: const FaIcon(
-                              FontAwesomeIcons.check,
-                              color: Colors.grey,
-                              size: 20,
-                            ),
-                            onPressed: () async {
-                              var valid = (_formKey.currentState!.validate());
-                              if (!valid) return;
-                              await _saveTask();
-                            },
-                          ),
-                        ],
+                      padding: const EdgeInsets.all(8.0),
+                      child: IconButton(
+                        icon: const FaIcon(
+                          FontAwesomeIcons.check,
+                          color: Colors.grey,
+                          size: 20,
+                        ),
+                        onPressed: () async {
+                          var valid = (_formKey.currentState!.validate());
+                          if (!valid) return;
+                          await _saveTask();
+                        },
                       ),
                     ),
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 20,
-                        vertical: 30,
-                      ),
-                      child: Form(
-                        key: _formKey,
-                        child: Column(
-                          children: [
-                            DefaultPrefixField(
-                              controller: _watch.titleController,
-                              hintText: 'Titulo',
-                              icon: Icons.title,
-                              validator: (String? value) {
-                                if (value!.isEmpty) {
-                                  return 'El Titulo es Obligatorio';
-                                }
-                                return null;
-                              },
-                            ),
-                            const SizedBox(height: 20),
-                            DefaultPrefixField(
-                              controller: _watch.commentsController,
-                              hintText: 'Comentarios',
-                              maxLines: 2,
-                              icon: Icons.comment_sharp,
-                            ),
-                            const SizedBox(height: 20),
-                            DefaultPrefixField(
-                              controller: _watch.descriptionController,
-                              hintText: 'Descripcion',
-                              maxLines: 2,
-                              icon: Icons.description,
-                            ),
-                            const SizedBox(height: 20),
-                            DefaultPrefixField(
-                              controller: _watch.tagsController,
-                              hintText: 'Tags',
-                              icon: Icons.tag,
-                            ),
-                            const SizedBox(height: 20),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Align(
-                                  alignment: Alignment.centerLeft,
-                                  child: GestureDetector(
-                                    onTap: () => pickDateDialog(context),
-                                    child: Chip(
-                                      label: _watch.selectTime == null
-                                          ? Text('Elegir Fecha')
-                                          : Text(formattDateNumber(
-                                              _watch.selectTime)),
-                                    ),
-                                  ),
-                                ),
-                                Expanded(child: Container()),
-                                const Text('Completada'),
-                                Checkbox(
-                                  checkColor: Colors.white,
-                                  // activeColor: ColorSecondary,
-                                  value: _watch.isCompleted,
-                                  onChanged: (bool? value) {
-                                    context
-                                        .read<TaskProvider>()
-                                        .setCompleted(value: value!);
-                                  },
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 20),
-                          ],
-                        ),
-                      ),
-                    )
                   ],
                 ),
-        ),
+                body: SingleChildScrollView(
+                  controller: ModalScrollController.of(context),
+                  child: Column(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 20,
+                          vertical: 30,
+                        ),
+                        child: Form(
+                          key: _formKey,
+                          child: Column(
+                            children: [
+                              DefaultPrefixField(
+                                controller: _watch.titleController,
+                                hintText: 'Titulo',
+                                icon: Icons.title,
+                                validator: (String? value) {
+                                  if (value!.isEmpty) {
+                                    return 'El Titulo es Obligatorio';
+                                  }
+                                  return null;
+                                },
+                              ),
+                              const SizedBox(height: 20),
+                              DefaultPrefixField(
+                                controller: _watch.commentsController,
+                                hintText: 'Comentarios',
+                                maxLines: 2,
+                                icon: Icons.comment_sharp,
+                              ),
+                              const SizedBox(height: 20),
+                              DefaultPrefixField(
+                                controller: _watch.descriptionController,
+                                hintText: 'Descripcion',
+                                maxLines: 2,
+                                icon: Icons.description,
+                              ),
+                              const SizedBox(height: 20),
+                              DefaultPrefixField(
+                                controller: _watch.tagsController,
+                                hintText: 'Tags',
+                                icon: Icons.tag,
+                              ),
+                              const SizedBox(height: 20),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: GestureDetector(
+                                      onTap: () => pickDateDialog(context),
+                                      child: Chip(
+                                        label: _watch.selectTime == null
+                                            ? const Text('Elegir Fecha')
+                                            : Text(formattDateNumber(
+                                                _watch.selectTime)),
+                                      ),
+                                    ),
+                                  ),
+                                  Expanded(child: Container()),
+                                  const Text('Completada'),
+                                  Checkbox(
+                                    checkColor: Colors.white,
+                                    // activeColor: ColorSecondary,
+                                    value: _watch.isCompleted,
+                                    onChanged: (bool? value) {
+                                      context
+                                          .read<TaskProvider>()
+                                          .setCompleted(value: value!);
+                                    },
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 20),
+                            ],
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              ),
       ),
     );
   }
